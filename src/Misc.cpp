@@ -1,6 +1,6 @@
 #include "../include/Misc.h"
 
-ULONG _pdFowlerA(LPCSTR String, ULONG Hash) {
+ULONG _sdFowlerA(LPCSTR String, ULONG Hash) {
 	if (*String == '\0') {
 		return Hash;
 	}
@@ -12,10 +12,10 @@ ULONG _pdFowlerA(LPCSTR String, ULONG Hash) {
 	Hash ^= (UCHAR)*String;
 	Hash *= 0x01000193;
 
-	return _pdFowlerA(++String, Hash);
+	return _sdFowlerA(++String, Hash);
 }
 
-ULONG _pdFowlerW(LPCWSTR String, ULONG Hash) {
+ULONG _sdFowlerW(LPCWSTR String, ULONG Hash) {
 	if (*String == L'\0') {
 		return Hash;
 	}
@@ -27,31 +27,31 @@ ULONG _pdFowlerW(LPCWSTR String, ULONG Hash) {
 	Hash ^= (UCHAR)*String;
 	Hash *= 0x01000193;
 
-	return _pdFowlerW(++String, Hash);
+	return _sdFowlerW(++String, Hash);
 }
 
-ULONG pdFowlerA(LPCSTR String) {
-	return _pdFowlerA(String, 0);
+ULONG sdFowlerA(LPCSTR String) {
+	return _sdFowlerA(String, 0);
 }
 
-ULONG pdFowlerW(LPCWSTR String) {
-	return _pdFowlerW(String, 0);
+ULONG sdFowlerW(LPCWSTR String) {
+	return _sdFowlerW(String, 0);
 }
 
-SIZE_T pdStringLengthA(LPCSTR String) {
-	return (*String == '\0') ? 0 : pdStringLengthA(String + 1) + 1;
+SIZE_T sdStringLengthA(LPCSTR String) {
+	return (*String == '\0') ? 0 : sdStringLengthA(String + 1) + 1;
 }
 
-SIZE_T pdStringLengthW(LPCWSTR String) {
-	return (*String == L'\0') ? 0 : pdStringLengthW(String + 1) + 1;
+SIZE_T sdStringLengthW(LPCWSTR String) {
+	return (*String == L'\0') ? 0 : sdStringLengthW(String + 1) + 1;
 }
 
 // Stolen from vx-api :P
-VOID pdRtlInitAnsiString(PANSI_STRING DestinationString, PCSTR SourceString) {
+VOID sdRtlInitAnsiString(PANSI_STRING DestinationString, PCSTR SourceString) {
 	SIZE_T Size;
 
 	if (SourceString) {
-		Size = pdStringLengthA(SourceString);
+		Size = sdStringLengthA(SourceString);
 		if (Size > (65535 - sizeof(CHAR))) {
 			Size = 65535 - sizeof(CHAR);
 		}
@@ -67,11 +67,11 @@ VOID pdRtlInitAnsiString(PANSI_STRING DestinationString, PCSTR SourceString) {
 }
 
 // unsafe but idgaf
-PVOID pdFindText(PSIZE_T Size, PIMAGE_SECTION_HEADER section, PVOID pe_base) {
-	ULONG hash = pdFowlerA((LPCSTR)section->Name);
+PVOID sdFindText(PSIZE_T Size, PIMAGE_SECTION_HEADER section, PVOID pe_base) {
+	ULONG hash = sdFowlerA((LPCSTR)section->Name);
 	if (hash == TEXT) {
 		*Size = section->SizeOfRawData;
 		return ((char*)pe_base + section->VirtualAddress);
 	}
-	return pdFindText(Size, ++section, pe_base);
+	return sdFindText(Size, ++section, pe_base);
 }

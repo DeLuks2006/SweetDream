@@ -1,6 +1,5 @@
 #pragma once
 #include <windows.h>
-#include <iostream>
 // include here all native definitions
 
 #define STATUS_SUCCESS (NTSTATUS)0x00000000L
@@ -27,6 +26,8 @@ typedef struct _UNICODE_STRING {
     _Field_size_bytes_part_opt_(MaximumLength, Length) PWCH Buffer;
 } UNICODE_STRING, * PUNICODE_STRING;
 
+typedef const UNICODE_STRING* PCUNICODE_STRING;
+
 typedef NTSTATUS(NTAPI* fn_NtAllocateVirtualMemory)(
     _In_ HANDLE ProcessHandle,
     _Inout_ PVOID* BaseAddress,
@@ -34,7 +35,7 @@ typedef NTSTATUS(NTAPI* fn_NtAllocateVirtualMemory)(
     _Inout_ PSIZE_T RegionSize,
     _In_ ULONG AllocationType,
     _In_ ULONG PageProtection
-);
+    );
 
 typedef NTSTATUS(NTAPI* fn_NtReadVirtualMemory)(
     _In_ HANDLE ProcessHandle,

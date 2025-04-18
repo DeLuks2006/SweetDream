@@ -2,14 +2,14 @@
 #include "Native.h"
 #include "Macros.h"
 
-PVOID pdFindText(PSIZE_T Size, PIMAGE_SECTION_HEADER section, PVOID pe_base);
+PVOID sdFindText(PSIZE_T Size, PIMAGE_SECTION_HEADER section, PVOID pe_base);
 
-ULONG pdFowlerA(LPCSTR String);
+ULONG sdFowlerA(LPCSTR String);
 
-ULONG pdFowlerW(LPCWSTR String);
+ULONG sdFowlerW(LPCWSTR String);
 
-SIZE_T pdStringLengthA(LPCSTR String);
+SIZE_T sdStringLengthA(LPCSTR String);
 
-SIZE_T pdStringLengthW(LPCWSTR String);
+SIZE_T sdStringLengthW(LPCWSTR String);
 
-VOID pdRtlInitAnsiString(PANSI_STRING DestinationString, PCSTR SourceString);
+VOID sdRtlInitAnsiString(PANSI_STRING DestinationString, PCSTR SourceString);

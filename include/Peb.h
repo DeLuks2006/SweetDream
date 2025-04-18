@@ -2,6 +2,6 @@
 #include "Native.h"
 #include "Misc.h"
 
-PVOID pdGetModuleHandle(ULONG Hash);
+PVOID sdGetModuleHandle(ULONG Hash);
 
-DWORD64 pdGetProcAddress(PVOID Module, ULONG Hash);
+DWORD64 sdGetProcAddress(PVOID Module, ULONG Hash);

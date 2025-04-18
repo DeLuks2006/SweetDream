@@ -12,14 +12,14 @@ PVOID _pdGetModuleHandle(ULONG Hash, PLIST_ENTRY StartListEntry, PLIST_ENTRY Lis
 	}
 
 	PLDR_DATA_TABLE_ENTRY pEntry = (PLDR_DATA_TABLE_ENTRY)((PBYTE)ListEntry - sizeof(LIST_ENTRY));
-	if (pdFowlerW((LPCWSTR)pEntry->FullDllName.Buffer) == Hash) {
+	if (sdFowlerW((LPCWSTR)pEntry->FullDllName.Buffer) == Hash) {
 		return (HMODULE)pEntry->DllBase;
 	}
 
 	return _pdGetModuleHandle(Hash, StartListEntry, ListEntry->Flink);
 }
 
-PVOID pdGetModuleHandle(ULONG Hash) {
+PVOID sdGetModuleHandle(ULONG Hash) {
 	return _pdGetModuleHandle(Hash, NULL, NULL);
 }
 
@@ -35,13 +35,13 @@ DWORD64 _pdGetProcAddress(PVOID Module, ULONG Hash, ULONG Index) {
 	PUINT32 Aof = (PUINT32)((ULONG_PTR)Module + Exp->AddressOfFunctions);
 	PUINT32 Aon = (PUINT32)((ULONG_PTR)Module + Exp->AddressOfNames);
 
-	if (pdFowlerA((LPCSTR)((ULONG_PTR)Module + Aon[Index])) == Hash) {
+	if (sdFowlerA((LPCSTR)((ULONG_PTR)Module + Aon[Index])) == Hash) {
 		return (DWORD64)((ULONG_PTR)Module + Aof[Aoo[Index]]);
 	}
 
 	return _pdGetProcAddress(Module, Hash, Index + 1);
 }
 
-DWORD64 pdGetProcAddress(PVOID Module, ULONG Hash) {
+DWORD64 sdGetProcAddress(PVOID Module, ULONG Hash) {
 	return _pdGetProcAddress(Module, Hash, 0);
 }
