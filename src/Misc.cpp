@@ -66,12 +66,54 @@ VOID sdRtlInitAnsiString(PANSI_STRING DestinationString, PCSTR SourceString) {
 	DestinationString->Buffer = (PCHAR)SourceString;
 }
 
+VOID sdRtlInitUnicodeString(_Inout_ PUNICODE_STRING DestinationString, _In_ PCWSTR SourceString) {
+	SIZE_T DestSize;
+	if (SourceString) {
+		DestSize = sdStringLengthW(SourceString) * sizeof(WCHAR);
+		DestinationString->Length = (USHORT)DestSize;
+		DestinationString->MaximumLength = (USHORT)DestSize + sizeof(WCHAR);
+	}
+	else {
+		DestinationString->Length = 0;
+		DestinationString->MaximumLength = 0;
+	}
+	DestinationString->Buffer = (PWCHAR)SourceString;
+}
+
 // unsafe but idgaf
 PVOID sdFindText(PSIZE_T Size, PIMAGE_SECTION_HEADER section, PVOID pe_base) {
 	ULONG hash = sdFowlerA((LPCSTR)section->Name);
 	if (hash == TEXT) {
 		*Size = section->SizeOfRawData;
-		return ((char*)pe_base + section->VirtualAddress);
+		return (PVOID)((DWORD_PTR)pe_base + (DWORD_PTR)section->VirtualAddress);
 	}
 	return sdFindText(Size, ++section, pe_base);
+}
+
+PCHAR sdStringCopyA(PCHAR String1, LPCSTR String2) {
+	PCHAR p = String1;
+	if (*String2 == 0) {
+		*p = 0;
+		return String1;
+	}
+	*p = *String2;
+	return sdStringCopyA(p + 1, String2 + 1);
+}
+
+PWCHAR sdStringCopyW(PWCHAR String1, LPCWSTR String2) {
+	PWCHAR p = String1;
+	if (*String2 == 0) {
+		*p = 0;
+		return String1;
+	}
+	*p = *String2;
+	return sdStringCopyW(p + 1, String2 + 1);
+}
+
+PCHAR sdStringConcatA(PCHAR String1, LPCSTR String2) {
+	return sdStringCopyA(&String1[sdStringLengthA(String1)], String2);
+}
+
+PWCHAR sdStringConcatW(PWCHAR String1, LPCWSTR String2) {
+	return sdStringCopyW(&String1[sdStringLengthW(String1)], String2);
 }

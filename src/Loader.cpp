@@ -70,7 +70,6 @@ void sdPerformRelocs(PRELOC_CTX ctx, DWORD_PTR pdwDelta) {
 void sdImportFunction(PIMPORT_CTX ctx, LPVOID lpImgBase, PVOID hLib, PIMAGE_THUNK_DATA tThunk, PIMAGE_THUNK_DATA tLookupThunk) {
 	PIMAGE_IMPORT_BY_NAME impFnName;
 	ANSI_STRING AnsiString;
-	LPCSTR strFnOrdinal;
 	PVOID pFunction;
 
 	if (tThunk->u1.AddressOfData == 0) {
