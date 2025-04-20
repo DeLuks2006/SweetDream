@@ -117,3 +117,25 @@ PCHAR sdStringConcatA(PCHAR String1, LPCSTR String2) {
 PWCHAR sdStringConcatW(PWCHAR String1, LPCWSTR String2) {
 	return sdStringCopyW(&String1[sdStringLengthW(String1)], String2);
 }
+
+VOID _sdByteArrayToCharArrayA(PCHAR Destination, PBYTE Source, DWORD Length, DWORD dwX = 0) {
+	if (dwX < Length) {
+		Destination[dwX] = (BYTE)Source[dwX];
+		return _sdByteArrayToCharArrayA(Destination, Source, Length, dwX + 1);
+	}
+}
+
+VOID _sdByteArrayToCharArrayW(PWCHAR Destination, PBYTE Source, DWORD Length, DWORD dwX = 0) {
+	if (dwX < Length) {
+		Destination[dwX] = (BYTE)Source[dwX];
+		return _sdByteArrayToCharArrayW(Destination, Source, Length, dwX + 1);
+	}
+}
+
+VOID sdByteArrayToCharArrayA(PCHAR Destination, PBYTE Source, DWORD Length) {
+	return _sdByteArrayToCharArrayA(Destination, Source, Length, 0);
+}
+
+VOID sdByteArrayToCharArrayW(PWCHAR Destination, PBYTE Source, DWORD Length) {
+	return _sdByteArrayToCharArrayW(Destination, Source, Length, 0);
+}

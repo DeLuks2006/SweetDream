@@ -16,5 +16,3 @@ PUNICODE_STRING sdGetModuleName(ULONG Hash);
 PVOID sdGetModuleHandle(ULONG Hash);
 
 DWORD64 sdGetProcAddress(PVOID Module, ULONG Hash);
-
-BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase);

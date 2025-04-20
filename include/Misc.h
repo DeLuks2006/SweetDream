@@ -23,3 +23,7 @@ PWCHAR sdStringCopyW(PWCHAR String1, LPCWSTR String2);
 PCHAR sdStringConcatA(PCHAR String1, LPCSTR String2);
 
 PWCHAR sdStringConcatW(PWCHAR String1, LPCWSTR String2);
+
+VOID sdByteArrayToCharArrayA(PCHAR Destination, PBYTE Source, DWORD Length);
+
+VOID sdByteArrayToCharArrayW(PWCHAR Destination, PBYTE Source, DWORD Length);
