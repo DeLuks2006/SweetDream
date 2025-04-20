@@ -18,12 +18,12 @@ And here we are.
 - It's Recursive!
 - API Hashing
 - `ntdll.dll` Unhooking
+- AMSI & ETW Patch
 - No CRT <- In Progress
 <!-- - Anti-Debugging using smelly_vx's `feverdream` technique (code runs only once machine is locked)-->
 
 ## $$\text{Tasks Left:}$$
 
-- [ ] [Patch AMSI](https://gist.github.com/CCob/fe3b63d80890fafeca982f76c8a3efdf)
 - [ ] [Execute only when PC is locked](https://vx-api.gitbook.io/vx-api/my-projects/fever-dream-code-executing-when-the-windows-machine-is-locked)
 - [ ] Convert to Shellcode (place functions in correct sections, replace calls to CreateFile, call from ASM, add linker script ...)
 
