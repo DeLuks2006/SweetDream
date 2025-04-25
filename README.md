@@ -1,9 +1,9 @@
 <div align=center>
-   <h1>$$\text{\LARGE Sweetdream}$$</h1>
-   <i><p>$$\text{Weird Reflective Loader}$$</p></i>
+   <h1>Sweetdream</h1>
+   <i><p>A Recursive UDRL that uses smelly_vx's Feverdream technique.</p></i>
 </div>
 
-## $$\text{About:}$$
+## About:
 
 Nothing special. Just a fully recursive portable executable (PE) loader written in C. 
 
@@ -14,18 +14,19 @@ problems with recursion as practice for my upcoming exam. At that time I began t
 
 And here we are.
 
-## $$\text{Features:}$$
+## Features:
 - It's Recursive!
 - API Hashing
-- `ntdll.dll` Unhooking
+- DLL Unhooking
 - AMSI & ETW Patch
-- No CRT <- In Progress
+<!-- - No CRT <- In Progress -->
 <!-- - Anti-Debugging using smelly_vx's `feverdream` technique (code runs only once machine is locked)-->
 
-## $$\text{Tasks Left:}$$
+## Tasks Left:
 
 - [ ] [Execute only when PC is locked](https://vx-api.gitbook.io/vx-api/my-projects/fever-dream-code-executing-when-the-windows-machine-is-locked)
 - [ ] Convert to Shellcode (place functions in correct sections, replace calls to CreateFile, call from ASM, add linker script ...)
 
-Later...
-- [ ] Test against Elastic????)
+<!--
+Add screenshots here once its fully done and working :)
+-->
