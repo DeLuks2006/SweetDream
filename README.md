@@ -14,6 +14,9 @@ problems with recursion as practice for my upcoming exam. At that time I began t
 
 And here we are.
 
+>[!NOTE]
+> This is obviously not production ready. Also since the loader only runs once the computer is locked the loader just sits there in memory- A better approach would be to encrypt the thread routine/function while the computer is unlocked and then decrypt it once its locked but that is a task for another time (I am getting lazy :P).
+
 ## Features:
 - It's Recursive!
 - API Hashing
@@ -21,11 +24,6 @@ And here we are.
 - AMSI & ETW Patch
 <!-- - No CRT <- In Progress -->
 <!-- - Anti-Debugging using smelly_vx's `feverdream` technique (code runs only once machine is locked)-->
-
-## Tasks Left:
-
-- [ ] [Execute only when PC is locked](https://vx-api.gitbook.io/vx-api/my-projects/fever-dream-code-executing-when-the-windows-machine-is-locked)
-- [ ] Convert to Shellcode (place functions in correct sections, replace calls to CreateFile, call from ASM, add linker script ...)
 
 <!--
 Add screenshots here once its fully done and working :)
