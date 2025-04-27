@@ -22,7 +22,7 @@ And here we are.
 - API Hashing
 - DLL Unhooking
 - AMSI & ETW Patch
-<!-- - Anti-Debugging using smelly_vx's `feverdream` technique (code runs only once machine is locked)-->
+- Anti-Debugging using smelly_vx's `feverdream` technique (PE is mapped while the machine is locked)
 
 <!--
 Add screenshots here once its fully done and working :)
