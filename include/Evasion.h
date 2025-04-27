@@ -9,3 +9,5 @@ BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase);
 BOOL sdPatchEtw(PVOID hNtdll);
 
 BOOL sdPatchAmsi(PVOID hNtdll);
+
+VOID Xor(PCHAR pBuffer, INT iLen);

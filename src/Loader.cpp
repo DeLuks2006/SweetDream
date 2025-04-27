@@ -35,7 +35,7 @@ void sdRelocateBlock(PRELOC_CTX pRelocCtx) {
 
 	pdwRelocRVA = ctx->pRelocBlock->dwPageAddress + ctx->pRelocEntries[i].usOffset;
 	pdwPatchPtr = 0;
-	pRelocCtx->NtStatus = pRelocCtx->pdNtReadVirtualMemory(((HANDLE)-1), (LPVOID)((DWORD_PTR)pRelocCtx->lpImgBase + pdwRelocRVA), &pdwPatchPtr, sizeof(DWORD_PTR), NULL);
+	pRelocCtx->NtStatus = pRelocCtx->NtReadVirtualMemory(((HANDLE)-1), (LPVOID)((DWORD_PTR)pRelocCtx->lpImgBase + pdwRelocRVA), &pdwPatchPtr, sizeof(DWORD_PTR), NULL);
 	if (pRelocCtx->NtStatus != STATUS_SUCCESS) {
 		return;
 	}
@@ -77,7 +77,7 @@ void sdImportFunction(PIMPORT_CTX ctx, LPVOID lpImgBase, PVOID hLib, PIMAGE_THUN
 	}
 
 	if (IMAGE_SNAP_BY_ORDINAL(tLookupThunk->u1.Ordinal)) {
-		ctx->NtStatus = ctx->pdLdrGetProcedureAddress(hLib, NULL, IMAGE_ORDINAL(tLookupThunk->u1.Ordinal), &pFunction);
+		ctx->NtStatus = ctx->LdrGetProcedureAddress(hLib, NULL, IMAGE_ORDINAL(tLookupThunk->u1.Ordinal), &pFunction);
 		if (ctx->NtStatus == STATUS_SUCCESS) {
 			tThunk->u1.Function = (ULONGLONG)pFunction;
 		}
@@ -85,7 +85,7 @@ void sdImportFunction(PIMPORT_CTX ctx, LPVOID lpImgBase, PVOID hLib, PIMAGE_THUN
 	else {
 		impFnName = (PIMAGE_IMPORT_BY_NAME)((DWORD_PTR)lpImgBase + tLookupThunk->u1.AddressOfData);
 		sdRtlInitAnsiString(&AnsiString, impFnName->Name);
-		ctx->NtStatus = ctx->pdLdrGetProcedureAddress(hLib, &AnsiString, 0, &pFunction);
+		ctx->NtStatus = ctx->LdrGetProcedureAddress(hLib, &AnsiString, 0, &pFunction);
 		if (ctx->NtStatus == STATUS_SUCCESS) {
 			tThunk->u1.Function = (ULONGLONG)pFunction;
 		}
@@ -111,12 +111,12 @@ void sdLoadImports(PIMPORT_CTX ctx, PIMAGE_IMPORT_DESCRIPTOR pidImportDescriptor
 	
 	sdRtlInitAnsiString(&AnsiString, (LPCSTR)pidImportDescriptor->Name + (DWORD_PTR)lpImgBase);
 
-	ctx->NtStatus = ctx->pdRtlAnsiStringToUnicodeString(&UnicodeString, &AnsiString, TRUE);
+	ctx->NtStatus = ctx->RtlAnsiStringToUnicodeString(&UnicodeString, &AnsiString, TRUE);
 	if (ctx->NtStatus != STATUS_SUCCESS) {
 		return;
 	}
 
-	ctx->NtStatus = ctx->pdLdrLoadDll(0, 0, &UnicodeString, &hLibrary);
+	ctx->NtStatus = ctx->LdrLoadDll(0, 0, &UnicodeString, &hLibrary);
 	if (ctx->NtStatus != STATUS_SUCCESS) {
 		return;
 	}

@@ -1,6 +1,5 @@
 #pragma once
-#include "Native.h"
-#include "Macros.h"
+#include "Common.h"
 
 ULONG sdFowlerA(LPCSTR String);
 

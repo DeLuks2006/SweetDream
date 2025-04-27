@@ -1,14 +1,13 @@
 #pragma once
-#include "Native.h"
-#include "Misc.h"
+#include "Common.h"
 
 typedef struct _UnhookApi {
-	fn_NtProtectVirtualMemory NtProtectVirtualMemory;
-	fn_NtCreateFile NtCreateFile;
-	fn_NtCreateSection NtCreateSection;
-	fn_NtMapViewOfSection NtMapViewOfSection;
-	fn_NtUnmapViewOfSection NtUnmapViewOfSection;
-	fn_NtClose NtClose;
+	NtProtectVirtualMemory_t NtProtectVirtualMemory;
+	NtCreateFile_t NtCreateFile;
+	NtCreateSection_t NtCreateSection;
+	NtMapViewOfSection_t NtMapViewOfSection;
+	NtUnmapViewOfSection_t NtUnmapViewOfSection;
+	NtClose_t NtClose;
 } UnhookApi;
 
 PUNICODE_STRING sdGetModuleName(ULONG Hash);
