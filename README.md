@@ -17,7 +17,6 @@ And here we are.
 >
 > This project is a proof of concept and not production-ready.
 > Currently, the loader remains in memory while the machine is unlocked, as it only activates once the machine is locked.
-> A better approach would involve encrypting the thread routine during unlocked sessions and decrypting it when the machine locks. (may be added in the future)
 
 ## Features:
 - It's Recursive!
@@ -26,9 +25,13 @@ And here we are.
 - AMSI & ETW Patch
 - Anti-Debugging using smelly_vx's ["Fever Dream"](https://vx-api.gitbook.io/vx-api/my-projects/fever-dream-code-executing-when-the-windows-machine-is-locked) trick.
 
+## Future Ideas:
+- Thread-Routine encryption while machine is unlocked
+- Deletion of the PE headers of the loaded binary
+
 ## Thanks:
 
-Here I would just like to thank [Nox](https://github.com/CaptainNox) and [cyb3rjerry](https://x.com/cyb3rjerry) for dealing with my stupid questions while developing this pretty useless loader. :)
+Here I would just like to thank [Nox](https://github.com/CaptainNox) and [cyb3rjerry](https://x.com/cyb3rjerry) for dealing with my stupid questions and rambling while developing this pretty useless loader. :)
 
 ##
 <div align=center>
