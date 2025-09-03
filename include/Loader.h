@@ -36,12 +36,8 @@ typedef struct IMPORT_CTX {
 	RtlAnsiStringToUnicodeString_t RtlAnsiStringToUnicodeString;
 } IMPORT_CTX, *PIMPORT_CTX;
 
-void sdCopySections(PIMAGE_SECTION_HEADER shSection, DWORD dwNumSections, DWORD dwSectionsProcessed, LPVOID lpImgBase, LPVOID lpFile);
+D_SEC( B ) void sdCopySections(PIMAGE_SECTION_HEADER shSection, DWORD dwNumSections, DWORD dwSectionsProcessed, LPVOID lpImgBase, LPVOID lpFile);
 
-void sdRelocateBlock(PRELOC_BLOCK_CTX prbcRelocCtx);
+D_SEC( B ) void sdPerformRelocs(PRELOC_CTX prcRelocCtx, DWORD_PTR pdwDelta);
 
-void sdPerformRelocs(PRELOC_CTX prcRelocCtx, DWORD_PTR pdwDelta);
-
-void sdImportFunction(PIMPORT_CTX ctx, LPVOID lpImgBase, PVOID hLib, PIMAGE_THUNK_DATA tThunk, PIMAGE_THUNK_DATA tLookupThunk);
-
-void sdLoadImports(PIMPORT_CTX ctx, PIMAGE_IMPORT_DESCRIPTOR pidImportDescriptor, LPVOID lpImgBase);
+D_SEC( B ) void sdLoadImports(PIMPORT_CTX ctx, PIMAGE_IMPORT_DESCRIPTOR pidImportDescriptor, LPVOID lpImgBase);

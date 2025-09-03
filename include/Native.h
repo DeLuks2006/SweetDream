@@ -1,17 +1,18 @@
 #pragma once
 #include <windows.h>
 // include here all native definitions
+typedef int BOOL;
 
 #pragma region Types & Structures
-#define STATUS_SUCCESS							(NTSTATUS)0x00000000L
-#define STATUS_IMAGE_ALREADY_LOADED				(NTSTATUS)0xC000010E
+#define STATUS_SUCCESS (NTSTATUS)0x00000000L
+#define STATUS_IMAGE_ALREADY_LOADED	(NTSTATUS)0xC000010E
 
-#define FILE_OPEN								0x00000001
+#define FILE_OPEN	0x00000001
 
-#define OBJ_CASE_INSENSITIVE					0x00000040L
-#define FILE_NON_DIRECTORY_FILE					0x00000040
+#define OBJ_CASE_INSENSITIVE 0x00000040L
+#define FILE_NON_DIRECTORY_FILE	0x00000040
 
-#define NOTIFY_FOR_THIS_SESSION					0
+#define NOTIFY_FOR_THIS_SESSION	0
 
 #define CurrentTID	(DWORD)__readgsqword(0x48)
 #define CurrentPID	(DWORD)__readgsqword(0x40)
@@ -421,7 +422,7 @@ typedef NTSTATUS (NTAPI* NtCreateFile_t)(
 );
 
 typedef NTSTATUS (NTAPI* NtClose_t)(
-	_In_ _Post_ptr_invalid_ HANDLE Handle
+	_In_ HANDLE Handle
 );
 
 typedef NTSTATUS(WINAPI* NtQuerySystemInformation_t)(

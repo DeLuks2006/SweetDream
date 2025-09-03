@@ -1,13 +1,11 @@
 #pragma once
-#include "Native.h"
-#include "Macros.h"
-#include "Misc.h"
-#include "Peb.h"
+#include "Common.h"
+typedef int BOOL;
 
-BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase);
+D_SEC( B ) BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase);
 
-BOOL sdPatchEtw(PVOID hNtdll);
+D_SEC( B ) BOOL sdPatchEtw(PVOID hNtdll);
 
-BOOL sdPatchAmsi(PVOID hNtdll);
+D_SEC( B ) BOOL sdPatchAmsi(PVOID hNtdll);
 
-VOID Xor(PCHAR pBuffer, INT iLen);
+D_SEC( B ) VOID Xor(PCHAR pBuffer, INT iLen);

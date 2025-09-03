@@ -10,8 +10,8 @@ typedef struct _UnhookApi {
 	NtClose_t NtClose;
 } UnhookApi;
 
-PUNICODE_STRING sdGetModuleName(ULONG Hash);
+D_SEC( B ) PUNICODE_STRING sdGetModuleName(ULONG Hash);
 
-PVOID sdGetModuleHandle(ULONG Hash);
+D_SEC( B ) PVOID sdGetModuleHandle(ULONG Hash);
 
-DWORD64 sdGetProcAddress(PVOID Module, ULONG Hash);
+D_SEC( B ) DWORD64 sdGetProcAddress(PVOID Module, ULONG Hash);

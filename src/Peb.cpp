@@ -1,6 +1,6 @@
 #include "../include/Peb.h"
 
-PUNICODE_STRING _sdGetModuleName(ULONG Hash, PLIST_ENTRY StartListEntry, PLIST_ENTRY ListEntry) {
+D_SEC( B ) PUNICODE_STRING _sdGetModuleName(ULONG Hash, PLIST_ENTRY StartListEntry, PLIST_ENTRY ListEntry) {
 	if (StartListEntry == NULL && ListEntry == NULL) {
 		PPEB_LDR_DATA Ldr = ((PPEB)__readgsqword(0x60))->Ldr;
 		StartListEntry = &Ldr->InMemoryOrderModuleList;
@@ -19,11 +19,11 @@ PUNICODE_STRING _sdGetModuleName(ULONG Hash, PLIST_ENTRY StartListEntry, PLIST_E
 	return _sdGetModuleName(Hash, StartListEntry, ListEntry->Flink);
 }
 
-PUNICODE_STRING sdGetModuleName(ULONG Hash) {
+D_SEC( B ) PUNICODE_STRING sdGetModuleName(ULONG Hash) {
 	return _sdGetModuleName(Hash, NULL, NULL);
 }
 
-PVOID _sdGetModuleHandle(ULONG Hash, PLIST_ENTRY StartListEntry, PLIST_ENTRY ListEntry) {
+D_SEC( B )PVOID _sdGetModuleHandle(ULONG Hash, PLIST_ENTRY StartListEntry, PLIST_ENTRY ListEntry) {
 	if (StartListEntry == NULL && ListEntry == NULL) {
 		PPEB_LDR_DATA Ldr = ((PPEB)__readgsqword(0x60))->Ldr;
 		StartListEntry = &Ldr->InMemoryOrderModuleList;
@@ -42,11 +42,11 @@ PVOID _sdGetModuleHandle(ULONG Hash, PLIST_ENTRY StartListEntry, PLIST_ENTRY Lis
 	return _sdGetModuleHandle(Hash, StartListEntry, ListEntry->Flink);
 }
 
-PVOID sdGetModuleHandle(ULONG Hash) {
+D_SEC( B ) PVOID sdGetModuleHandle(ULONG Hash) {
 	return _sdGetModuleHandle(Hash, NULL, NULL);
 }
 
-DWORD64 _sdGetProcAddress(PVOID Module, ULONG Hash, ULONG Index) {
+D_SEC( B ) DWORD64 _sdGetProcAddress(PVOID Module, ULONG Hash, ULONG Index) {
 	PIMAGE_NT_HEADERS Nth = (PIMAGE_NT_HEADERS)((BYTE*)Module + ((PIMAGE_DOS_HEADER)Module)->e_lfanew);
 	PIMAGE_DATA_DIRECTORY Dir = &Nth->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT];
 	PIMAGE_EXPORT_DIRECTORY Exp = (PIMAGE_EXPORT_DIRECTORY)((ULONG_PTR)Module + Dir->VirtualAddress);
@@ -65,6 +65,6 @@ DWORD64 _sdGetProcAddress(PVOID Module, ULONG Hash, ULONG Index) {
 	return _sdGetProcAddress(Module, Hash, Index + 1);
 }
 
-DWORD64 sdGetProcAddress(PVOID Module, ULONG Hash) {
+D_SEC( B ) DWORD64 sdGetProcAddress(PVOID Module, ULONG Hash) {
 	return _sdGetProcAddress(Module, Hash, 0);
 }

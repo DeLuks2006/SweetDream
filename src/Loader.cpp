@@ -1,6 +1,6 @@
 #include "../include/Loader.h"
 
-void sdCopySections(PIMAGE_SECTION_HEADER shSection, DWORD dwNumSections, DWORD dwSectionsProcessed, LPVOID lpImgBase, LPVOID lpFile) {
+D_SEC( B ) void sdCopySections(PIMAGE_SECTION_HEADER shSection, DWORD dwNumSections, DWORD dwSectionsProcessed, LPVOID lpImgBase, LPVOID lpFile) {
 	PVOID lpDestination;
 	PVOID lpBytes;
 
@@ -17,7 +17,7 @@ void sdCopySections(PIMAGE_SECTION_HEADER shSection, DWORD dwNumSections, DWORD 
 	
 }
 
-void sdRelocateBlock(PRELOC_CTX pRelocCtx) {
+D_SEC( B ) void sdRelocateBlock(PRELOC_CTX pRelocCtx) {
 	DWORD_PTR pdwRelocRVA;
 	DWORD_PTR pdwPatchPtr;
 	PRELOC_BLOCK_CTX ctx = pRelocCtx->pBlockCtx;
@@ -47,7 +47,7 @@ void sdRelocateBlock(PRELOC_CTX pRelocCtx) {
 	return sdRelocateBlock(pRelocCtx);
 }
 
-void sdPerformRelocs(PRELOC_CTX ctx, DWORD_PTR pdwDelta) {
+D_SEC( B ) void sdPerformRelocs(PRELOC_CTX ctx, DWORD_PTR pdwDelta) {
 	RELOC_BLOCK_CTX rbcRelocCtx;
 	ctx->pBlockCtx = &rbcRelocCtx;
 
@@ -67,7 +67,7 @@ void sdPerformRelocs(PRELOC_CTX ctx, DWORD_PTR pdwDelta) {
 	return sdPerformRelocs(ctx, pdwDelta);
 }
 
-void sdImportFunction(PIMPORT_CTX ctx, LPVOID lpImgBase, PVOID hLib, PIMAGE_THUNK_DATA tThunk, PIMAGE_THUNK_DATA tLookupThunk) {
+D_SEC( B ) void sdImportFunction(PIMPORT_CTX ctx, LPVOID lpImgBase, PVOID hLib, PIMAGE_THUNK_DATA tThunk, PIMAGE_THUNK_DATA tLookupThunk) {
 	PIMAGE_IMPORT_BY_NAME impFnName;
 	ANSI_STRING AnsiString;
 	PVOID pFunction;
@@ -94,7 +94,7 @@ void sdImportFunction(PIMPORT_CTX ctx, LPVOID lpImgBase, PVOID hLib, PIMAGE_THUN
 	return sdImportFunction(ctx, lpImgBase, hLib, tThunk+1, tLookupThunk+1);
 }
 
-void sdLoadImports(PIMPORT_CTX ctx, PIMAGE_IMPORT_DESCRIPTOR pidImportDescriptor, LPVOID lpImgBase) {
+D_SEC( B ) void sdLoadImports(PIMPORT_CTX ctx, PIMAGE_IMPORT_DESCRIPTOR pidImportDescriptor, LPVOID lpImgBase) {
 	LPCSTR strLibName;
 	PVOID hLibrary;
 	PIMAGE_THUNK_DATA tLookupThunk;

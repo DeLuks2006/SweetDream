@@ -1,4 +1,4 @@
 #pragma once
 #include "Common.h"
 
-LPTHREAD_START_ROUTINE SweetDream(LPVOID lpParam);
+D_SEC( B ) LPTHREAD_START_ROUTINE SweetDream(LPVOID lpParam);

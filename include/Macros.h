@@ -1,6 +1,6 @@
 #pragma once
 
-#define TEXT								0x88a82ec2
+#define TEXT_SCT						0x88a82ec2
 
 #define NTDLL								0xa62a3b3b
 #define USER32								0x9d334019
@@ -46,10 +46,6 @@
 #define WTS_REGISTER_SESSION_NOTIFICATION	0xe4de854d
 #define WTS_UNREGISTER_SESSION_NOTIFICATION 0x2a7819f4
 
-// REMOVE THIS - IS JUST BC MSVC FOR SOME REASON DOESNT SUPPORT __BUILTIN_MEMCPY
-#define __builtin_memcpy memcpy
-#define __builtin_memset memset
-
 // all the below shamelessly stolen from titanldr :)
 
 // get relative offset of string or pointer
@@ -58,11 +54,10 @@
 // place function in specific region of mem
 #define D_SEC( x )	__attribute__((section( ".text$" #x ) ))
 
-// cast as pointer with specified typedef
-#define D_API( x )	__typeof__( x ) * x
-
 // cast unsigned pointer-wide int type 
 #define U_PTR( x )	( ( ULONG_PTR ) x )
 
 // cast unsigned pointer-wide type
 #define C_PTR( x )	( ( PVOID ) x )
+
+#define G_END( x )	U_PTR( GetIp( ) + 11 )
